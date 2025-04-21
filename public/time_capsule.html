@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Capsule - Schedule Your Message</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      margin-bottom: 30px;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0d9488;
+      text-decoration: none;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #0d9488;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #4a5568;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .logout-btn:hover {
+      color: #0d9488;
+      text-decoration: underline;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .main-title {
+      text-align: center;
+      color: #2a4365;
+      margin-bottom: 40px;
+      font-size: 2.2rem;
+    }
+    
+    .capsule-form {
+      background-color: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .capsule-form::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, #0d9488 0%, #7e22ce 100%);
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #4a5568;
+      font-weight: 500;
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 200px;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #0d9488;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+      background-color: white;
+    }
+    
+    .datetime-input {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .datetime-input input {
+      flex: 1;
+    }
+    
+    button {
+      padding: 16px 30px;
+      background-color: #0d9488;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(13, 148, 136, 0.1);
+    }
+    
+    button:hover {
+      background-color: #0f766e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(13, 148, 136, 0.15);
+    }
+    
+    .character-count {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #718096;
+      margin-top: 5px;
+    }
+    
+    .scheduled-capsules {
+      margin-top: 50px;
+    }
+    
+    .scheduled-title {
+      color: #2a4365;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+    
+    .capsule-list {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .capsule-item {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid #0d9488;
+    }
+    
+    .capsule-message {
+      margin-bottom: 15px;
+      color: #4a5568;
+      white-space: pre-line;
+    }
+    
+    .capsule-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #718096;
+      font-size: 0.9rem;
+    }
+    
+    .success-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #0d9488;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transform: translateY(-100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .success-message.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    @media (max-width: 768px) {
+      .capsule-form {
+        padding: 30px 20px;
+      }
+      
+      .main-title {
+        font-size: 1.8rem;
+      }
+      
+      .datetime-input {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="/" class="logo">Time Capsule</a>
+      <div class="user-menu">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <button class="logout-btn" id="logoutBtn">Log Out</button>
+      </div>
+    </header>
+    
+    <h1 class="main-title">Create Your Time Capsule</h1>
+    
+    <form id="capsuleForm" class="capsule-form">
+      <div class="form-group">
+        <label for="recipientEmail">Recipient Email</label>
+        <input type="email" id="recipientEmail" name="email" required placeholder="Enter recipient's email address">
+      </div>
+      
+      <div class="form-group">
+        <label for="capsuleMessage">Your Message</label>
+        <textarea id="capsuleMessage" name="message" required placeholder="Write your time capsule message here..." maxlength="2000"></textarea>
+        <div class="character-count"><span id="charCount">0</span>/2000 characters</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="deliveryTime">Delivery Date & Time</label>
+        <div class="datetime-input">
+          <input type="datetime-local" id="deliveryTime" name="sendTime" required min="">
+        </div>
+      </div>
+      
+      <button type="submit">Schedule Time Capsule</button>
+    </form>
+    
+    <div class="scheduled-capsules">
+      <h2 class="scheduled-title">Your Scheduled Capsules</h2>
+      <div class="capsule-list" id="capsuleList">
+        <!-- Capsules will be loaded here -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="success-message" id="successMessage">
+    Time Capsule scheduled successfully!
+  </div>
+
+  <script>
+    // DOM Elements
+    const capsuleForm = document.getElementById('capsuleForm');
+    const capsuleList = document.getElementById('capsuleList');
+    const successMessage = document.getElementById('successMessage');
+    const charCount = document.getElementById('charCount');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set minimum datetime to current time + 5 minutes
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 5);
+      document.getElementById('deliveryTime').min = now.toISOString().slice(0, 16);
+      
+      // Load user's scheduled capsules
+      loadScheduledCapsules();
+      
+      // Get user info for avatar
+      const userEmail = localStorage.getItem('userEmail');
+      if (userEmail) {
+        userAvatar.textContent = userEmail.charAt(0).toUpperCase();
+      }
+    });
+    
+    // Character counter
+    document.getElementById('capsuleMessage').addEventListener('input', function(e) {
+      const count = e.target.value.length;
+      charCount.textContent = count;
+      
+      // Change color when approaching limit
+      if (count > 1800) {
+        charCount.style.color = '#dd6b20'; // Orange
+      } else if (count > 1950) {
+        charCount.style.color = '#e53e3e'; // Red
+      } else {
+        charCount.style.color = '#718096'; // Gray
+      }
+    });
+    
+    // Form submission
+    capsuleForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        email: document.getElementById('recipientEmail').value,
+        message: document.getElementById('capsuleMessage').value,
+        sendTime: document.getElementById('deliveryTime').value
+      };
+      
+      try {
+        const response = await fetch('/schedule_message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to schedule capsule');
+        }
+        
+        // Show success message
+        showSuccessMessage();
+        
+        // Reset form
+        capsuleForm.reset();
+        charCount.textContent = '0';
+        charCount.style.color = '#718096';
+        
+        // Reload capsules
+        loadScheduledCapsules();
+      } catch (err) {
+        alert(err.message);
+        console.error('Error scheduling capsule:', err);
+      }
+    });
+    
+    // Load scheduled capsules
+    async function loadScheduledCapsules() {
+      try {
+        const userEmail = localStorage.getItem('userEmail');
+        if (!userEmail) return;
+        
+        const response = await fetch(`/get_capsules?email=${encodeURIComponent(userEmail)}`);
+        const capsules = await response.json();
+        
+        capsuleList.innerHTML = '';
+        
+        if (capsules.length === 0) {
+          capsuleList.innerHTML = '<p>No scheduled capsules yet.</p>';
+          return;
+        }
+        
+        capsules.forEach(capsule => {
+          const capsuleItem = document.createElement('div');
+          capsuleItem.className = 'capsule-item';
+          
+          const message = document.createElement('div');
+          message.className = 'capsule-message';
+          message.textContent = capsule.message;
+          
+          const meta = document.createElement('div');
+          meta.className = 'capsule-meta';
+          
+          const date = new Date(capsule.sendTime).toLocaleString();
+          const created = new Date(capsule.createdAt).toLocaleDateString();
+          
+          meta.innerHTML = `
+            <span>Scheduled for: ${date}</span>
+            <span>Created on: ${created}</span>
+          `;
+          
+          capsuleItem.appendChild(message);
+          capsuleItem.appendChild(meta);
+          capsuleList.appendChild(capsuleItem);
+        });
+      } catch (err) {
+        console.error('Error loading capsules:', err);
+      }
+    }
+    
+    // Show success message
+    function showSuccessMessage() {
+      successMessage.classList.add('show');
+      setTimeout(() => {
+        successMessage.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Logout
+    logoutBtn.addEventListener('click', function() {
+      localStorage.removeItem('userEmail');
+      window.location.href = '/login';
+    });
+  </script>
+</body>
+</html>

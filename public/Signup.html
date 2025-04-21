@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Capsule - Sign Up</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.5s ease-out;
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, #0d9488 0%, #7e22ce 100%);
+    }
+    
+    h2 {
+      text-align: center;
+      color: #2a4365;
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #4a5568;
+      font-weight: 500;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #0d9488;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+      background-color: white;
+    }
+    
+    button {
+      width: 100%;
+      padding: 16px;
+      background-color: #0d9488;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(13, 148, 136, 0.1);
+      margin-top: 10px;
+    }
+    
+    button:hover {
+      background-color: #0f766e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(13, 148, 136, 0.15);
+    }
+    
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #4a5568;
+    }
+    
+    .login-link a {
+      color: #0d9488;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+    
+    .error-message {
+      color: #e53e3e;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Create Your Time Capsule Account</h2>
+    
+    <form id="signupForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        <div class="error-message" id="name-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+        <div class="error-message" id="email-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Create a password" minlength="8">
+        <div class="error-message" id="password-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" min="13" max="120" placeholder="Enter your age">
+      </div>
+      
+      <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number">
+      </div>
+      
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender">
+          <option value="">Select gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+          <option value="prefer-not-to-say">Prefer not to say</option>
+        </select>
+      </div>
+      
+      <button type="submit">Create Account</button>
+      
+      <div class="login-link">
+        Already have an account? <a href="/login">Log in</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Clear previous errors
+      document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+      });
+      
+      // Validate inputs
+      let isValid = true;
+      
+      // Name validation
+      const name = document.getElementById('name').value.trim();
+      if (name.length < 2) {
+        showError('name-error', 'Name must be at least 2 characters');
+        isValid = false;
+      }
+      
+      // Email validation
+      const email = document.getElementById('email').value;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('email-error', 'Please enter a valid email address');
+        isValid = false;
+      }
+      
+      // Password validation
+      const password = document.getElementById('password').value;
+      if (password.length < 8) {
+        showError('password-error', 'Password must be at least 8 characters');
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        document.querySelector('.container').style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          document.querySelector('.container').style.animation = '';
+        }, 500);
+        return;
+      }
+      
+      // Prepare data
+      const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        age: document.getElementById('age').value || undefined,
+        mobile: document.getElementById('mobile').value || undefined,
+        gender: document.getElementById('gender').value || undefined
+      };
+      
+      try {
+        const response = await fetch('/store', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+        
+        alert('Registration successful! Please check your email for verification.');
+        window.location.href = '/login';
+      } catch (err) {
+        showError('email-error', err.message);
+        console.error('Registration error:', err);
+      }
+    });
+    
+    function showError(id, message) {
+      const errorElement = document.getElementById(id);
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
